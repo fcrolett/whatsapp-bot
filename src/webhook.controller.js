@@ -27,7 +27,7 @@ async function handleMessage(req, res) {
     return res.sendStatus(200);
   }
 
-  const reply = `Hai scritto: ${text}`;
+  const reply = await askAI(text);
 
   await sendMessage(from, reply);
 
