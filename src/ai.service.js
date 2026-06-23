@@ -21,6 +21,7 @@ Rispondi usando queste informazioni:
 
 ${context}
 
+
 Se non sai qualcosa, dì chiaramente che non è disponibile.
         `,
       },
@@ -31,5 +32,7 @@ Se non sai qualcosa, dì chiaramente che non è disponibile.
     ],
   });
 
+  console.log("AI input:", userMessage);
+  console.log("AI output:", response.choices[0].message.content);
   return response.choices[0].message.content;
 }
