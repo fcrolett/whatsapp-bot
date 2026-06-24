@@ -5,14 +5,7 @@ const { askAI } = require("./ai.service");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: ["http://localhost:4200", "https://whatsapp-chat-fe.onrender.com"],
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }),
-);
-
+app.use(cors());
 app.options("*", cors());
 
 app.use(express.json());
