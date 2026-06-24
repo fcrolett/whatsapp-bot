@@ -26,7 +26,5 @@ module.exports = {
 
   verifyToken: getRequiredEnv("VERIFY_TOKEN"),
 
-  openAiApiKey: getRequiredEnv("OPENAI_API_KEY"),
-
   allowedNumbers: parseAllowedNumbers(process.env.ALLOWED_NUMBERS || ""),
 };

@@ -1,16 +1,11 @@
 const OpenAI = require("openai");
 const knowledge = require("./knowledge.json");
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-function buildContext() {
-  return `
-Informazioni disponibili:
-${Object.values(knowledge).join("\n")}
-`;
-}
+const client = process.env.OPENAI_API_KEY
+  ? new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    })
+  : null;
 
 function askLocalKnowledge(userMessage) {
   const message = userMessage.toLowerCase();
@@ -56,7 +51,19 @@ function askLocalKnowledge(userMessage) {
   return "Al momento posso rispondere solo usando le informazioni disponibili su azienda, orari e prezzi.";
 }
 
+function buildContext() {
+  return `
+Informazioni disponibili:
+${Object.values(knowledge).join("\n")}
+`;
+}
+
 async function askAI(userMessage) {
+  if (!client) {
+    console.log("OPENAI_API_KEY non presente, uso fallback locale.");
+    return askLocalKnowledge(userMessage);
+  }
+
   try {
     const context = buildContext();
 
@@ -104,4 +111,3 @@ Regole:
 }
 
 module.exports = { askAI };
-``;
