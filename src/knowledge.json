@@ -1,5 +1,17 @@
 {
-  "azienda": "La nostra azienda vende software per CRM.",
-  "orari": "Siamo aperti dal lunedì al venerdì dalle 9 alle 18.",
-  "prezzi": "Il piano base costa 29€ al mese."
+  "azienda": {
+    "nome": "WA Bot Federico",
+    "descrizione": "Assistente AI per rispondere automaticamente a domande su servizi, orari e prezzi."
+  },
+  "orari": {
+    "giorni": "Dal lunedì al venerdì",
+    "fascia": "Dalle 9 alle 18"
+  },
+  "prezzi": {
+    "piano_base": "29€ al mese",
+    "note": "I prezzi possono variare in base alle esigenze del cliente."
+  },
+  "contatti": {
+    "email": "federico.croletti@gmail.com"
+  }
 }

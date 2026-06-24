@@ -1,8 +1,13 @@
+const OpenAI = require("openai");
 const knowledge = require("./knowledge.json");
+
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 function buildContext() {
   return `
-Informazioni azienda:
+Informazioni disponibili:
 ${Object.values(knowledge).join("\n")}
 `;
 }
@@ -17,13 +22,18 @@ async function askAI(userMessage) {
         role: "system",
         content: `
 Sei un assistente aziendale.
-Rispondi usando queste informazioni:
+Rispondi in italiano semplice, in modo chiaro e sintetico.
+
+Devi usare principalmente queste informazioni:
 
 ${context}
 
-
-Se non sai qualcosa, dì chiaramente che non è disponibile.
-        `,
+Regole:
+- Se la risposta è presente nelle informazioni disponibili, rispondi usando quelle informazioni.
+- Se la risposta non è presente nelle informazioni disponibili, dillo chiaramente.
+- Non inventare prezzi, orari, servizi o dettagli aziendali.
+- Se l'utente saluta, rispondi in modo naturale e chiedi come puoi aiutare.
+`,
       },
       {
         role: "user",
@@ -32,7 +42,12 @@ Se non sai qualcosa, dì chiaramente che non è disponibile.
     ],
   });
 
+  const reply = response.choices[0].message.content;
+
   console.log("AI input:", userMessage);
-  console.log("AI output:", response.choices[0].message.content);
-  return response.choices[0].message.content;
+  console.log("AI output:", reply);
+
+  return reply;
 }
+
+module.exports = { askAI };

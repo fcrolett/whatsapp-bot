@@ -1,5 +1,6 @@
 const config = require("./config");
 const { sendMessage } = require("./whatsapp.service");
+const { askAI } = require("./ai.service");
 
 function verify(req, res) {
   const mode = req.query["hub.mode"];
@@ -14,24 +15,40 @@ function verify(req, res) {
 }
 
 async function handleMessage(req, res) {
-  const message = req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+  try {
+    const message = req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
 
-  if (!message) return res.sendStatus(200);
+    if (!message) {
+      return res.sendStatus(200);
+    }
 
-  const from = message.from;
-  const text = message.text?.body;
+    const from = message.from;
+    const text = message.text?.body;
 
-  console.log("IN:", from, text);
+    console.log("IN:", from, text);
 
-  if (!config.allowedNumbers.includes(from)) {
+    if (!text) {
+      return res.sendStatus(200);
+    }
+
+    if (!config.allowedNumbers.includes(from)) {
+      console.log("Numero non autorizzato:", from);
+      return res.sendStatus(200);
+    }
+
+    const reply = await askAI(text);
+
+    await sendMessage(from, reply);
+
     return res.sendStatus(200);
+  } catch (err) {
+    console.error(
+      "Errore webhook WhatsApp:",
+      err.response?.data || err.message || err,
+    );
+
+    return res.sendStatus(500);
   }
-
-  const reply = await askAI(text);
-
-  await sendMessage(from, reply);
-
-  res.sendStatus(200);
 }
 
 module.exports = { verify, handleMessage };
